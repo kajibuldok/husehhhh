@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Information Viewer</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap">
+    <style>
+        body {
+            background-color: black;
+            color: #00FF00;
+            font-family: 'Source Code Pro', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        .logo {
+            font-size: 9em; /* Ukuran font untuk logo */
+            margin-bottom: -30px; /* Jarak bawah antara logo dan teks proyek */
+            margin-top: 30px; /* Menambahkan jarak atas untuk geser logo ke bawah */
+        }
+        .project-name {
+            font-size: 1.2em; /* Ukuran font untuk teks proyek */
+            margin-bottom: 10px; /* Jarak bawah antara teks proyek dan judul */
+            font-weight: bold;
+        }
+        h1 {
+            font-size: 1.2em; /* Ukuran font untuk judul tetap lebih besar */
+        }
+        .info {
+            font-size: 0.8em; /* Mengatur ukuran font menjadi lebih kecil */
+            margin-top: 5px; /* Menurunkan jarak antara elemen */
+        }
+
+        .judul1 {
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">☣</div> <!-- Logo di atas teks proyek -->
+        <div class="project-name">PROJECT1998 ENVIRONMENT</div> <!-- Teks proyek di bawah logo -->
+        <h1 class="judul1">connection and device information</h1>
+        <div class="info" id="ip-address">Loading IP...</div>
+        <div class="info" id="country">Loading country...</div>
+        <div class="info" id="city">Loading city...</div>
+        <div class="info" id="timezone">Loading timezone...</div>
+        <div class="info" id="isp">Loading ISP...</div>
+        <div class="info" id="zip">Loading ZIP code...</div>
+        <div class="info" id="user-agent">Loading User-Agent...</div>
+    </div>
+
+    <script>
+        // Fetch the IP address
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                const ip = data.ip;
+                document.getElementById('ip-address').textContent = `IP Address: ${ip}`;
+
+                // Fetch location data based on the IP address
+                return fetch(`http://ip-api.com/json/${ip}`);
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('country').textContent = `Country: ${data.country}`;
+                document.getElementById('city').textContent = `City: ${data.city}`;
+                document.getElementById('timezone').textContent = `Timezone: ${data.timezone}`;
+                document.getElementById('isp').textContent = `ISP: ${data.isp}`;
+                document.getElementById('zip').textContent = `ZIP Code: ${data.zip}`;
+            })
+            .catch(error => {
+                document.getElementById('ip-address').textContent = 'Error fetching IP';
+                document.getElementById('country').textContent = 'Error fetching country';
+                document.getElementById('city').textContent = 'Error fetching city';
+                document.getElementById('timezone').textContent = 'Error fetching timezone';
+                document.getElementById('isp').textContent = 'Error fetching ISP';
+                document.getElementById('zip').textContent = 'Error fetching ZIP code';
+                console.error('Error fetching IP info:', error);
+            });
+
+        // Display User-Agent
+        document.getElementById('user-agent').textContent = `User-Agent: ${navigator.userAgent}`;
+    </script>
+</body>
+</html>
